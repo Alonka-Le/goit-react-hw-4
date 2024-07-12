@@ -13,8 +13,8 @@ function App() {
   const [totalPages, setTotalPages] = useState(1000);
   const [page, setPage] = useState(1);
 
-  const onSubmit = (evt) => {
-    setQuery(evt);
+  const onSubmit = (newSerch) => {
+    setQuery(newSerch);
     setImages([]);
     setTotalPages(1000);
     setPage(1);
@@ -27,10 +27,9 @@ function App() {
         setLoading(true);
         setError(false);
         const { results, total_pages } = await fetchImg(query, page);
+
+        setImages((prevImages) => [...prevImages, ...results]);
         setTotalPages(total_pages);
-        setImages((prevArticles) => {
-          [...prevArticles, ...results];
-        });
       } catch (error) {
         setError(true);
       } finally {
@@ -44,12 +43,17 @@ function App() {
 
   return (
     <div>
-      <h1>Image Gallery</h1>
       {page >= totalPages && <p>This is the end! Start a new search!</p>}
       <SearchBar onSubmit={onSubmit} />
-      {images.length > 0 && <ImageGallery images={images} />}
-      {loading && <Loader />}
-      {error && <ErrorMessage />}
+      {error ? (
+        <ErrorMessage message={error} />
+      ) : (
+        <>
+          <ImageGallery images={images} />
+          {loading && <Loader />}
+          {/* {hasMore && !isLoading && <LoadMoreBtn onClick={loadMoreImages} />} */}
+        </>
+      )}
     </div>
   );
 }
