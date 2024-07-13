@@ -13,6 +13,7 @@ export default function Loader() {
         ariaLabel="three-dots-loading"
         wrapperStyle={{}}
         wrapperClass=""
+        className={css.loader}
       />
     </div>
   );
